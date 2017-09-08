@@ -50,4 +50,8 @@ class Api extends CI_Controller{
         $api = "https://api.line.me/v2/bot/room/".$roomId."/leave";
         return $api;
     }
+    public function getApiAutocompletePlace($input, $key){
+        $api = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=".$input."&types=geocode&key=".$key;
+        return $api;
+    }
 }

@@ -6,8 +6,8 @@
  * Date: 9/5/2017
  * Time: 5:19 PM
  */
-class User_model extends CI_Model{
-    private $table = 'USER';
+class Trip_model extends CI_Model{
+    private $table = 'TRIP';
 
     public function __construct(){
         parent::__construct();
@@ -24,13 +24,13 @@ class User_model extends CI_Model{
     }
 
     public function update($id, $data){
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_TRIP', $id);
         $return=$this->db->update($this->table, $data);
         return $return;
     }
 
     public function delete($id){
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_TRIP', $id);
         $this->db->delete($this->table);
     }
 
@@ -44,17 +44,22 @@ class User_model extends CI_Model{
     }
 
     public function getRecordsById($id) {
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_TRIP', $id);
         $query = $this->db->get($this->table);
         return $query->row();
     }
 
     public function isNotAvailable($id){
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_TRIP', $id);
         $query = $this->db->get($this->table);
         if($query->num_rows() > 0)
             return false;
         else
             return true;
+    }
+
+    public function search($input){
+        $query = $this->db->query("SELECT * FROM TRIP WHERE MATCH (TITLE_TRIP,DESCRIPTION_TRIP,ADDRESS_DESTINATION) AGAINST ('$input' IN BOOLEAN MODE)");
+        return $query->result();
     }
 }

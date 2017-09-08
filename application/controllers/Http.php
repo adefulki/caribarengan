@@ -65,4 +65,19 @@ class Http extends CI_Controller{
         curl_close($ch);
         return $result;
     }
+
+    function httpGet2($url){
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result=curl_exec($ch);
+        if($result === false)
+        {
+            echo "Error Number:".curl_errno($ch)."<br>";
+            echo "Error String:".curl_error($ch);
+        }
+        curl_close($ch);
+        return $result;
+    }
 }
