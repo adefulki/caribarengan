@@ -6,8 +6,8 @@
  * Date: 9/5/2017
  * Time: 5:19 PM
  */
-class User_model extends CI_Model{
-    private $table = 'user';
+class Request_model extends CI_Model{
+    private $table = 'request';
 
     public function __construct(){
         parent::__construct();
@@ -15,22 +15,21 @@ class User_model extends CI_Model{
 
     public function add($data){
         $return = $this->db->insert($this->table, $data);
-        if ((bool) $return === TRUE) {
-            return $this->db->insert_id();
-        } else {
-            return $return;
-        }
+        if ((bool) $return === FALSE)
+            return false;
+        else
+            return true;
 
     }
 
     public function update($id, $data){
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_REQUEST', $id);
         $return=$this->db->update($this->table, $data);
         return $return;
     }
 
     public function delete($id){
-        $this->db->where('ID_USER', $id);
+        $this->db->where('ID_REQUEST', $id);
         $this->db->delete($this->table);
     }
 
@@ -44,22 +43,27 @@ class User_model extends CI_Model{
     }
 
     public function getRecordsById($id) {
+        $this->db->where('ID_REQUEST', $id);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
+
+    public function getRecordsByUserId($id) {
         $this->db->where('ID_USER', $id);
         $query = $this->db->get($this->table);
         return $query->row();
     }
 
-    public function isUserIdNotAvailable($id){
-        $this->db->where('ID_USER', $id);
+    public function getRecordsByUserIdTripId($idUser, $idTrip) {
+        $this->db->where('ID_TRIP', $idTrip);
+        $this->db->where('ID_USER', $idUser);
         $query = $this->db->get($this->table);
-        if($query->num_rows() > 0)
-            return false;
-        else
-            return true;
+        return $query->row();
     }
 
-    public function isLineIdNotAvailable($id){
-        $this->db->where('ID_LINE', $id);
+    public function isNotAvailable($idTrip, $idUser){
+        $this->db->where('ID_TRIP', $idTrip);
+        $this->db->where('ID_USER', $idUser);
         $query = $this->db->get($this->table);
         if($query->num_rows() > 0)
             return false;

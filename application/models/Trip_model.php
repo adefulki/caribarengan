@@ -7,7 +7,7 @@
  * Time: 5:19 PM
  */
 class Trip_model extends CI_Model{
-    private $table = 'TRIP';
+    private $table = 'trip';
 
     public function __construct(){
         parent::__construct();
@@ -59,7 +59,14 @@ class Trip_model extends CI_Model{
     }
 
     public function search($input){
-        $query = $this->db->query("SELECT * FROM TRIP WHERE MATCH (TITLE_TRIP,DESCRIPTION_TRIP,ADDRESS_DESTINATION) AGAINST ('$input' IN BOOLEAN MODE)");
+        $query = $this->db->query("SELECT * FROM ".$this->table." WHERE MATCH (TITLE_TRIP,DESCRIPTION_TRIP,ADDRESS_DESTINATION) AGAINST ('$input' IN BOOLEAN MODE) ORDER BY COUNT_REQUEST DESC LIMIT 5");
+        return $query->result();
+    }
+
+    public function getPopular(){
+        $this->db->limit(5);
+        $this->db->order_by("COUNT_REQUEST", "DESC");
+        $query = $this->db->get($this->table);
         return $query->result();
     }
 }
